@@ -15,7 +15,7 @@ import com.ruoyi.common.core.utils.StringUtils;
  */
 public class SecurityContextHolder
 {
-    private static final TransmittableThreadLocal<Map<String, Object>> THREAD_LOCAL = new TransmittableThreadLocal<>();
+    private static final TransmittableThreadLocal<Map<String, Object>> THREAD_LOCAL = new TransmittableThreadLocal<>();     //TODO TransmittableThreadLocal是什么?
 
     public static void set(String key, Object value)
     {
@@ -23,7 +23,7 @@ public class SecurityContextHolder
         map.put(key, value == null ? StringUtils.EMPTY : value);
     }
 
-    public static String get(String key)
+    public static String get(String key)        //获取key的值
     {
         Map<String, Object> map = getLocalMap();
         return Convert.toStr(map.getOrDefault(key, StringUtils.EMPTY));
@@ -37,7 +37,7 @@ public class SecurityContextHolder
 
     public static Map<String, Object> getLocalMap()
     {
-        Map<String, Object> map = THREAD_LOCAL.get();
+        Map<String, Object> map = THREAD_LOCAL.get();       //threadLocal
         if (map == null)
         {
             map = new ConcurrentHashMap<String, Object>();
@@ -63,7 +63,7 @@ public class SecurityContextHolder
 
     public static String getUserName()
     {
-        return get(SecurityConstants.DETAILS_USERNAME);
+        return get(SecurityConstants.DETAILS_USERNAME);     //从THREAD_LOCAL中获取key=userName的值,获取用户名
     }
 
     public static void setUserName(String username)

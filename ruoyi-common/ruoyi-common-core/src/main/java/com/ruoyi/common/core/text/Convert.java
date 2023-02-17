@@ -542,9 +542,9 @@ public class Convert
      * @param defaultValue 转换错误时的默认值
      * @return 结果
      */
-    public static Boolean toBool(Object value, Boolean defaultValue)
+    public static Boolean toBool(Object value, Boolean defaultValue)        //映射value到true/false/defaultValue
     {
-        if (value == null)
+        if (value == null)      //value为null,返回默认值
         {
             return defaultValue;
         }
@@ -553,7 +553,7 @@ public class Convert
             return (Boolean) value;
         }
         String valueStr = toStr(value, null);
-        if (StringUtils.isEmpty(valueStr))
+        if (StringUtils.isEmpty(valueStr))      //空字符串,返回默认值
         {
             return defaultValue;
         }

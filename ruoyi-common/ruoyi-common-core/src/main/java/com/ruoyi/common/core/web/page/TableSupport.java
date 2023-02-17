@@ -5,11 +5,10 @@ import com.ruoyi.common.core.utils.ServletUtils;
 
 /**
  * 表格数据处理
- * 
+ *
  * @author ruoyi
  */
-public class TableSupport
-{
+public class TableSupport {
     /**
      * 当前记录起始索引
      */
@@ -38,19 +37,17 @@ public class TableSupport
     /**
      * 封装分页对象
      */
-    public static PageDomain getPageDomain()
-    {
+    public static PageDomain getPageDomain() {
         PageDomain pageDomain = new PageDomain();
-        pageDomain.setPageNum(Convert.toInt(ServletUtils.getParameter(PAGE_NUM), 1));
+        pageDomain.setPageNum(Convert.toInt(ServletUtils.getParameter(PAGE_NUM), 1));   //从HttpServletRequest中获取pageNum,默认第1页
         pageDomain.setPageSize(Convert.toInt(ServletUtils.getParameter(PAGE_SIZE), 10));
-        pageDomain.setOrderByColumn(ServletUtils.getParameter(ORDER_BY_COLUMN));
-        pageDomain.setIsAsc(ServletUtils.getParameter(IS_ASC));
-        pageDomain.setReasonable(ServletUtils.getParameterToBool(REASONABLE));
+        pageDomain.setOrderByColumn(ServletUtils.getParameter(ORDER_BY_COLUMN));    //按照哪列排序
+        pageDomain.setIsAsc(ServletUtils.getParameter(IS_ASC));     //排序
+        pageDomain.setReasonable(ServletUtils.getParameterToBool(REASONABLE));  //分页参数合理化
         return pageDomain;
     }
 
-    public static PageDomain buildPageRequest()
-    {
+    public static PageDomain buildPageRequest() {
         return getPageDomain();
     }
 }

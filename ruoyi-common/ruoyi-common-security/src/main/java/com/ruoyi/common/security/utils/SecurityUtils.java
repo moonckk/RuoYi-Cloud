@@ -29,7 +29,7 @@ public class SecurityUtils
      */
     public static String getUsername()
     {
-        return SecurityContextHolder.getUserName();
+        return SecurityContextHolder.getUserName();     //权限上下文持有对象中获取userName
     }
 
     /**

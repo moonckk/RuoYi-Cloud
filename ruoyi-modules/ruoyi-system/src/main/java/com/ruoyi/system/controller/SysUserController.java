@@ -70,12 +70,12 @@ public class SysUserController extends BaseController
     /**
      * 获取用户列表
      */
-    @RequiresPermissions("system:user:list")
+    @RequiresPermissions("system:user:list")        //权限认证：必须具有指定权限才能进入该方法
     @GetMapping("/list")
     public TableDataInfo list(SysUser user)
     {
-        startPage();
-        List<SysUser> list = userService.selectUserList(user);
+        startPage();        //给PageHelper设置分页属性
+        List<SysUser> list = userService.selectUserList(user);  //SysUser对象作为过滤条件
         return getDataTable(list);
     }
 
@@ -86,7 +86,7 @@ public class SysUserController extends BaseController
     {
         List<SysUser> list = userService.selectUserList(user);
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        util.exportExcel(response, list, "用户数据");
+        util.exportExcel(response, list, "用户数据");       //将list写入到wb工作簿,然后通过response流返回
     }
 
     @Log(title = "用户管理", businessType = BusinessType.IMPORT)
@@ -95,9 +95,9 @@ public class SysUserController extends BaseController
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
     {
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        List<SysUser> userList = util.importExcel(file.getInputStream());
-        String operName = SecurityUtils.getUsername();
-        String message = userService.importUser(userList, updateSupport, operName);
+        List<SysUser> userList = util.importExcel(file.getInputStream());       //表格内容转list
+        String operName = SecurityUtils.getUsername();      //权限获取工具类,获取userName
+        String message = userService.importUser(userList, updateSupport, operName); //updateSupport 存在就更新
         return success(message);
     }
 
