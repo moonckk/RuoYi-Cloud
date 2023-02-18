@@ -16,7 +16,7 @@ import feign.RequestTemplate;
  * @author ruoyi
  */
 @Component
-public class FeignRequestInterceptor implements RequestInterceptor
+public class FeignRequestInterceptor implements RequestInterceptor         //openfeign请求拦截器
 {
     @Override
     public void apply(RequestTemplate requestTemplate)

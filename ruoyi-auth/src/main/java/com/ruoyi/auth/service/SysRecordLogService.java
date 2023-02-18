@@ -31,7 +31,7 @@ public class SysRecordLogService
      */
     public void recordLogininfor(String username, String status, String message)
     {
-        SysLogininfor logininfor = new SysLogininfor();
+        SysLogininfor logininfor = new SysLogininfor();     //系统访问记录对象
         logininfor.setUserName(username);
         logininfor.setIpaddr(IpUtils.getIpAddr(ServletUtils.getRequest()));
         logininfor.setMsg(message);
@@ -44,6 +44,6 @@ public class SysRecordLogService
         {
             logininfor.setStatus(Constants.LOGIN_FAIL_STATUS);
         }
-        remoteLogService.saveLogininfor(logininfor, SecurityConstants.INNER);
+        remoteLogService.saveLogininfor(logininfor, SecurityConstants.INNER);   //保存访问记录
     }
 }

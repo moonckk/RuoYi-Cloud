@@ -82,8 +82,8 @@ public class SysLoginService
             recordLogService.recordLogininfor(username, Constants.LOGIN_FAIL, "用户已停用，请联系管理员");
             throw new ServiceException("对不起，您的账号：" + username + " 已停用");
         }
-        passwordService.validate(user, password);
-        recordLogService.recordLogininfor(username, Constants.LOGIN_SUCCESS, "登录成功");
+        passwordService.validate(user, password);   //密码匹配,账号锁定
+        recordLogService.recordLogininfor(username, Constants.LOGIN_SUCCESS, "登录成功");       //打日志
         return userInfo;
     }
 

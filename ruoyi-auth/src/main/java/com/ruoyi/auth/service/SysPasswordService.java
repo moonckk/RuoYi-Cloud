@@ -43,14 +43,14 @@ public class SysPasswordService
     {
         String username = user.getUserName();
 
-        Integer retryCount = redisService.getCacheObject(getCacheKey(username));
+        Integer retryCount = redisService.getCacheObject(getCacheKey(username));    //redis记录密码输入错误次数
 
         if (retryCount == null)
         {
             retryCount = 0;
         }
 
-        if (retryCount >= Integer.valueOf(maxRetryCount).intValue())
+        if (retryCount >= Integer.valueOf(maxRetryCount).intValue())        //达到错误重试次数,直接中断抛出异常
         {
             String errMsg = String.format("密码输入错误%s次，帐户锁定%s分钟", maxRetryCount, lockTime);
             recordLogService.recordLogininfor(username, Constants.LOGIN_FAIL,errMsg);
