@@ -49,9 +49,9 @@ public class AuthLogic
     /**
      * 会话注销，根据指定Token
      */
-    public void logoutByToken(String token)
+    public void logoutByToken(String token) //1
     {
-        tokenService.delLoginUser(token);
+        tokenService.delLoginUser(token);   //注销token
     }
 
     /**
@@ -69,12 +69,12 @@ public class AuthLogic
      */
     public LoginUser getLoginUser()
     {
-        String token = SecurityUtils.getToken();
+        String token = SecurityUtils.getToken();    //获取token
         if (token == null)
         {
             throw new NotLoginException("未提供token");
         }
-        LoginUser loginUser = SecurityUtils.getLoginUser();
+        LoginUser loginUser = SecurityUtils.getLoginUser(); //有token再获取登陆用户
         if (loginUser == null)
         {
             throw new NotLoginException("无效的token");
@@ -133,9 +133,9 @@ public class AuthLogic
      * 
      * @param requiresPermissions 注解对象
      */
-    public void checkPermi(RequiresPermissions requiresPermissions)
+    public void checkPermi(RequiresPermissions requiresPermissions) //1  需要校验的权限码  验证模式：AND | OR，默认AND
     {
-        SecurityContextHolder.setPermission(StringUtils.join(requiresPermissions.value(), ","));
+        SecurityContextHolder.setPermission(StringUtils.join(requiresPermissions.value(), ","));    //权限用','拼接
         if (requiresPermissions.logical() == Logical.AND)
         {
             checkPermiAnd(requiresPermissions.value());
@@ -151,7 +151,7 @@ public class AuthLogic
      *
      * @param permissions 权限列表
      */
-    public void checkPermiAnd(String... permissions)
+    public void checkPermiAnd(String... permissions)    //1
     {
         Set<String> permissionList = getPermiList();
         for (String permission : permissions)
@@ -168,7 +168,7 @@ public class AuthLogic
      * 
      * @param permissions 权限码数组
      */
-    public void checkPermiOr(String... permissions)
+    public void checkPermiOr(String... permissions) //1
     {
         Set<String> permissionList = getPermiList();
         for (String permission : permissions)
@@ -213,15 +213,15 @@ public class AuthLogic
      * 
      * @param requiresRoles 注解对象
      */
-    public void checkRole(RequiresRoles requiresRoles)
+    public void checkRole(RequiresRoles requiresRoles)  //1
     {
         if (requiresRoles.logical() == Logical.AND)
         {
-            checkRoleAnd(requiresRoles.value());
+            checkRoleAnd(requiresRoles.value());        //角色之间是且的关系,  requiresRoles.value()是string[]
         }
         else
         {
-            checkRoleOr(requiresRoles.value());
+            checkRoleOr(requiresRoles.value());     //角色之间是或的关系,  requiresRoles.value()是string[]
         }
     }
 
@@ -230,14 +230,14 @@ public class AuthLogic
      * 
      * @param roles 角色标识数组
      */
-    public void checkRoleAnd(String... roles)
+    public void checkRoleAnd(String... roles)       //1
     {
-        Set<String> roleList = getRoleList();
+        Set<String> roleList = getRoleList();   //获取当前用户的角色集合
         for (String role : roles)
         {
             if (!hasRole(roleList, role))
             {
-                throw new NotRoleException(role);
+                throw new NotRoleException(role);       //用户必须拥有所有权限
             }
         }
     }
@@ -247,14 +247,14 @@ public class AuthLogic
      * 
      * @param roles 角色标识数组
      */
-    public void checkRoleOr(String... roles)
+    public void checkRoleOr(String... roles)    //1
     {
-        Set<String> roleList = getRoleList();
+        Set<String> roleList = getRoleList();   //获取登录用户的角色集合
         for (String role : roles)
         {
             if (hasRole(roleList, role))
             {
-                return;
+                return;     //只要包含其中一个就可以通过
             }
         }
         if (roles.length > 0)
@@ -314,12 +314,12 @@ public class AuthLogic
      * 
      * @return 角色列表
      */
-    public Set<String> getRoleList()
+    public Set<String> getRoleList()    //1
     {
         try
         {
-            LoginUser loginUser = getLoginUser();
-            return loginUser.getRoles();
+            LoginUser loginUser = getLoginUser();   //获取当前登陆用户
+            return loginUser.getRoles();    //返回用户的所有角色集合
         }
         catch (Exception e)
         {

@@ -19,7 +19,7 @@ import com.ruoyi.system.api.model.LoginUser;
 
 /**
  * token验证处理
- * 
+ *
  * @author ruoyi
  */
 @Component
@@ -41,27 +41,27 @@ public class TokenService
     /**
      * 创建令牌
      */
-    public Map<String, Object> createToken(LoginUser loginUser)
+    public Map<String, Object> createToken(LoginUser loginUser)     //1 登陆创建令牌token
     {
-        String token = IdUtils.fastUUID();
-        Long userId = loginUser.getSysUser().getUserId();
-        String userName = loginUser.getSysUser().getUserName();
+        String token = IdUtils.fastUUID();  //token是uuid
+        Long userId = loginUser.getSysUser().getUserId();   //userid
+        String userName = loginUser.getSysUser().getUserName(); //username
         loginUser.setToken(token);
         loginUser.setUserid(userId);
         loginUser.setUsername(userName);
-        loginUser.setIpaddr(IpUtils.getIpAddr(ServletUtils.getRequest()));
-        refreshToken(loginUser);
+        loginUser.setIpaddr(IpUtils.getIpAddr(ServletUtils.getRequest()));  //设置登陆ip
+        refreshToken(loginUser);    //刷新登陆用户的令牌token,redis缓存user_key,并设置过期时间,这个时间就是用户的过期时间
 
-        // Jwt存储信息
-        Map<String, Object> claimsMap = new HashMap<String, Object>();
-        claimsMap.put(SecurityConstants.USER_KEY, token);
-        claimsMap.put(SecurityConstants.DETAILS_USER_ID, userId);
-        claimsMap.put(SecurityConstants.DETAILS_USERNAME, userName);
+        // Jwt存储信息,创建token时会用到
+        Map<String, Object> claimsMap = new HashMap<String, Object>();  //设置数据声明
+        claimsMap.put(SecurityConstants.USER_KEY, token);   //user_key:token
+        claimsMap.put(SecurityConstants.DETAILS_USER_ID, userId);   //user_id
+        claimsMap.put(SecurityConstants.DETAILS_USERNAME, userName);    //user_name
 
         // 接口返回信息
         Map<String, Object> rspMap = new HashMap<String, Object>();
-        rspMap.put("access_token", JwtUtils.createToken(claimsMap));
-        rspMap.put("expires_in", expireTime);
+        rspMap.put("access_token", JwtUtils.createToken(claimsMap));    //jwt创建并返回token
+        rspMap.put("expires_in", expireTime);   //返回过期时间
         return rspMap;
     }
 
@@ -80,11 +80,11 @@ public class TokenService
      *
      * @return 用户信息
      */
-    public LoginUser getLoginUser(HttpServletRequest request)
+    public LoginUser getLoginUser(HttpServletRequest request)   //1
     {
         // 获取请求携带的令牌
-        String token = SecurityUtils.getToken(request);
-        return getLoginUser(token);
+        String token = SecurityUtils.getToken(request);     //从request中获取token
+        return getLoginUser(token);     //获取token对应的登陆用户
     }
 
     /**
@@ -92,15 +92,15 @@ public class TokenService
      *
      * @return 用户信息
      */
-    public LoginUser getLoginUser(String token)
+    public LoginUser getLoginUser(String token) //1
     {
         LoginUser user = null;
         try
         {
             if (StringUtils.isNotEmpty(token))
             {
-                String userkey = JwtUtils.getUserKey(token);
-                user = redisService.getCacheObject(getTokenKey(userkey));
+                String userkey = JwtUtils.getUserKey(token);        //根据token获取user key
+                user = redisService.getCacheObject(getTokenKey(userkey));   //根据user_key获取token_key, redis中获取token_key缓存的登陆用户对象  login_tokens:<token>
                 return user;
             }
         }
@@ -124,12 +124,12 @@ public class TokenService
     /**
      * 删除用户缓存信息
      */
-    public void delLoginUser(String token)
+    public void delLoginUser(String token)  //1
     {
         if (StringUtils.isNotEmpty(token))
         {
-            String userkey = JwtUtils.getUserKey(token);
-            redisService.deleteObject(getTokenKey(userkey));
+            String userkey = JwtUtils.getUserKey(token);    //根据token获得userKey
+            redisService.deleteObject(getTokenKey(userkey));    //从redis中删除会话信息,键是login_tokens:<token>
         }
     }
 
@@ -153,17 +153,17 @@ public class TokenService
      *
      * @param loginUser 登录信息
      */
-    public void refreshToken(LoginUser loginUser)
+    public void refreshToken(LoginUser loginUser)   //1  用redis记录令牌有效期
     {
-        loginUser.setLoginTime(System.currentTimeMillis());
-        loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
+        loginUser.setLoginTime(System.currentTimeMillis()); //设置登陆时间
+        loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE); //设置过期时间: 开始登陆时间+过期时间
         // 根据uuid将loginUser缓存
-        String userKey = getTokenKey(loginUser.getToken());
-        redisService.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
+        String userKey = getTokenKey(loginUser.getToken()); //获取user key  login_tokens:<token>
+        redisService.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);  //user key缓存到redis,过期时间
     }
 
-    private String getTokenKey(String token)
+    private String getTokenKey(String token)    //1
     {
-        return ACCESS_TOKEN + token;
+        return ACCESS_TOKEN + token;        //login_tokens:<token>
     }
 }

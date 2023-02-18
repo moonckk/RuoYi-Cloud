@@ -16,7 +16,7 @@ public interface SysConfigMapper
      * @param config 参数配置信息
      * @return 参数配置信息
      */
-    public SysConfig selectConfig(SysConfig config);
+    public SysConfig selectConfig(SysConfig config);    //1
 
     /**
      * 通过ID查询配置

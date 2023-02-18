@@ -8,7 +8,7 @@ import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.core.utils.StringUtils;
 
 /**
- * 获取当前线程变量中的 用户id、用户名称、Token等信息 
+ * 获取当前线程变量中的 用户id、用户名称、Token等信息
  * 注意： 必须在网关通过请求头的方法传入，同时在HeaderInterceptor拦截器设置值。 否则这里无法获取
  *
  * @author ruoyi
@@ -29,18 +29,18 @@ public class SecurityContextHolder
         return Convert.toStr(map.getOrDefault(key, StringUtils.EMPTY));
     }
 
-    public static <T> T get(String key, Class<T> clazz)
+    public static <T> T get(String key, Class<T> clazz)     //1
     {
-        Map<String, Object> map = getLocalMap();
+        Map<String, Object> map = getLocalMap();    //获取ThreadLocal对象
         return StringUtils.cast(map.getOrDefault(key, null));
     }
 
-    public static Map<String, Object> getLocalMap()
+    public static Map<String, Object> getLocalMap() //1
     {
         Map<String, Object> map = THREAD_LOCAL.get();       //threadLocal
         if (map == null)
         {
-            map = new ConcurrentHashMap<String, Object>();
+            map = new ConcurrentHashMap<String, Object>();  //如果为空,设置为juc的Map
             THREAD_LOCAL.set(map);
         }
         return map;
@@ -86,9 +86,9 @@ public class SecurityContextHolder
         return get(SecurityConstants.ROLE_PERMISSION);
     }
 
-    public static void setPermission(String permissions)
+    public static void setPermission(String permissions)    //设置权限
     {
-        set(SecurityConstants.ROLE_PERMISSION, permissions);
+        set(SecurityConstants.ROLE_PERMISSION, permissions);    //角色权限
     }
 
     public static void remove()

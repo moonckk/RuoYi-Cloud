@@ -43,9 +43,9 @@ public class SecurityUtils
     /**
      * 获取登录用户信息
      */
-    public static LoginUser getLoginUser()
+    public static LoginUser getLoginUser()  //1
     {
-        return SecurityContextHolder.get(SecurityConstants.LOGIN_USER, LoginUser.class);
+        return SecurityContextHolder.get(SecurityConstants.LOGIN_USER, LoginUser.class);    //权限上下文持有者获取登陆用户
     }
 
     /**
@@ -53,7 +53,7 @@ public class SecurityUtils
      */
     public static String getToken()
     {
-        return getToken(ServletUtils.getRequest());
+        return getToken(ServletUtils.getRequest()); //从servlet.request中获取token
     }
 
     /**
@@ -62,17 +62,17 @@ public class SecurityUtils
     public static String getToken(HttpServletRequest request)
     {
         // 从header获取token标识
-        String token = request.getHeader(TokenConstants.AUTHENTICATION);
+        String token = request.getHeader(TokenConstants.AUTHENTICATION);    //从header中获取token,key=Authorization
         return replaceTokenPrefix(token);
     }
 
     /**
      * 裁剪token前缀
      */
-    public static String replaceTokenPrefix(String token)
+    public static String replaceTokenPrefix(String token)   //修饰token
     {
         // 如果前端设置了令牌前缀，则裁剪掉前缀
-        if (StringUtils.isNotEmpty(token) && token.startsWith(TokenConstants.PREFIX))
+        if (StringUtils.isNotEmpty(token) && token.startsWith(TokenConstants.PREFIX))       //"Bearer " 令牌前缀
         {
             token = token.replaceFirst(TokenConstants.PREFIX, "");
         }
@@ -96,7 +96,7 @@ public class SecurityUtils
      * @param password 密码
      * @return 加密字符串
      */
-    public static String encryptPassword(String password)
+    public static String encryptPassword(String password)   //1  密码编码
     {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder.encode(password);

@@ -29,7 +29,7 @@ public class AuthUtil
      * 
      * @param token 指定token
      */
-    public static void logoutByToken(String token)
+    public static void logoutByToken(String token)  //1
     {
         authLogic.logoutByToken(token);
     }
@@ -37,7 +37,7 @@ public class AuthUtil
     /**
      * 检验当前会话是否已经登录，如未登录，则抛出异常
      */
-    public static void checkLogin()
+    public static void checkLogin() //检查登陆
     {
         authLogic.checkLogin();
     }
@@ -89,7 +89,7 @@ public class AuthUtil
      * 
      * @param requiresRoles 角色权限注解
      */
-    public static void checkRole(RequiresRoles requiresRoles)
+    public static void checkRole(RequiresRoles requiresRoles)   //1 校验用户的哪些权限,从注解中取得值: 需要校验的角色标识,验证逻辑：AND | OR，默认AND
     {
         authLogic.checkRole(requiresRoles);
     }
@@ -140,7 +140,7 @@ public class AuthUtil
      * 
      * @param requiresPermissions 权限注解
      */
-    public static void checkPermi(RequiresPermissions requiresPermissions)
+    public static void checkPermi(RequiresPermissions requiresPermissions)  //1
     {
         authLogic.checkPermi(requiresPermissions);
     }

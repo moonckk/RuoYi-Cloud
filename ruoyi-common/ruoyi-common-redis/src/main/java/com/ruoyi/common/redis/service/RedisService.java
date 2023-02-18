@@ -102,9 +102,9 @@ public class RedisService
      * @param key 缓存键值
      * @return 缓存键值对应的数据
      */
-    public <T> T getCacheObject(final String key)
+    public <T> T getCacheObject(final String key)   //1
     {
-        ValueOperations<String, T> operation = redisTemplate.opsForValue();
+        ValueOperations<String, T> operation = redisTemplate.opsForValue();     //springboot封装的redis客户端,可以将获取的值反序列化为泛型对象
         return operation.get(key);
     }
 

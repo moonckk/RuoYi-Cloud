@@ -26,13 +26,13 @@ public class RemoteUserFallbackFactory implements FallbackFactory<RemoteUserServ
         return new RemoteUserService()
         {
             @Override
-            public R<LoginUser> getUserInfo(String username, String source)
+            public R<LoginUser> getUserInfo(String username, String source)     //获取用户失败的服务降级
             {
                 return R.fail("获取用户失败:" + throwable.getMessage());
             }
 
             @Override
-            public R<Boolean> registerUserInfo(SysUser sysUser, String source)
+            public R<Boolean> registerUserInfo(SysUser sysUser, String source)      //注册失败时的服务降级
             {
                 return R.fail("注册用户失败:" + throwable.getMessage());
             }

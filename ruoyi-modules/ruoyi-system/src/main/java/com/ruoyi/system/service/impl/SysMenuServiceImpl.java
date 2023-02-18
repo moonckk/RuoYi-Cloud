@@ -86,7 +86,7 @@ public class SysMenuServiceImpl implements ISysMenuService
      * @return 权限列表
      */
     @Override
-    public Set<String> selectMenuPermsByUserId(Long userId)
+    public Set<String> selectMenuPermsByUserId(Long userId)     //1
     {
         List<String> perms = menuMapper.selectMenuPermsByUserId(userId);
         Set<String> permsSet = new HashSet<>();
@@ -107,15 +107,15 @@ public class SysMenuServiceImpl implements ISysMenuService
      * @return 权限列表
      */
     @Override
-    public Set<String> selectMenuPermsByRoleId(Long roleId)
+    public Set<String> selectMenuPermsByRoleId(Long roleId)     //1
     {
-        List<String> perms = menuMapper.selectMenuPermsByRoleId(roleId);
+        List<String> perms = menuMapper.selectMenuPermsByRoleId(roleId);    //根据角色id获取权限集合
         Set<String> permsSet = new HashSet<>();
         for (String perm : perms)
         {
             if (StringUtils.isNotEmpty(perm))
             {
-                permsSet.addAll(Arrays.asList(perm.trim().split(",")));
+                permsSet.addAll(Arrays.asList(perm.trim().split(","))); //获取的多个菜单权限用','连接,需要拆分成单个菜单权限的集合
             }
         }
         return permsSet;

@@ -34,7 +34,7 @@ public interface ISysRoleService
      * @param userId 用户ID
      * @return 权限列表
      */
-    public Set<String> selectRolePermissionByUserId(Long userId);
+    public Set<String> selectRolePermissionByUserId(Long userId);       //根据用户id查询角色权限集合
 
     /**
      * 查询所有角色

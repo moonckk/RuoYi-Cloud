@@ -18,22 +18,22 @@ import com.ruoyi.common.security.annotation.InnerAuth;
  */
 @Aspect
 @Component
-public class InnerAuthAspect implements Ordered
+public class InnerAuthAspect implements Ordered     //Ordered接口
 {
     @Around("@annotation(innerAuth)")
-    public Object innerAround(ProceedingJoinPoint point, InnerAuth innerAuth) throws Throwable
+    public Object innerAround(ProceedingJoinPoint point, InnerAuth innerAuth) throws Throwable   //InnerAuth是自己定义的注解
     {
-        String source = ServletUtils.getRequest().getHeader(SecurityConstants.FROM_SOURCE);
+        String source = ServletUtils.getRequest().getHeader(SecurityConstants.FROM_SOURCE);     //获取请求来源
         // 内部请求验证
-        if (!StringUtils.equals(SecurityConstants.INNER, source))
+        if (!StringUtils.equals(SecurityConstants.INNER, source))   //不是内部请求,拦截
         {
             throw new InnerAuthException("没有内部访问权限，不允许访问");
         }
 
-        String userid = ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_USER_ID);
-        String username = ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_USERNAME);
+        String userid = ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_USER_ID); //userid
+        String username = ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_USERNAME);  //username
         // 用户信息验证
-        if (innerAuth.isUser() && (StringUtils.isEmpty(userid) || StringUtils.isEmpty(username)))
+        if (innerAuth.isUser() && (StringUtils.isEmpty(userid) || StringUtils.isEmpty(username)))   //注解要验证用户信息,但是当前没有登陆用户,拦截
         {
             throw new InnerAuthException("没有设置用户信息，不允许访问 ");
         }
@@ -46,6 +46,6 @@ public class InnerAuthAspect implements Ordered
     @Override
     public int getOrder()
     {
-        return Ordered.HIGHEST_PRECEDENCE + 1;
+        return Ordered.HIGHEST_PRECEDENCE + 1;    // int HIGHEST_PRECEDENCE = Integer.MIN_VALUE;
     }
 }

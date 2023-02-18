@@ -23,9 +23,9 @@ public class JwtUtils
      * @param claims 数据声明
      * @return 令牌
      */
-    public static String createToken(Map<String, Object> claims)
+    public static String createToken(Map<String, Object> claims)    //1
     {
-        String token = Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret).compact();
+        String token = Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret).compact();   //设置jwt数据声明,密钥,生成token
         return token;
     }
 
@@ -35,26 +35,26 @@ public class JwtUtils
      * @param token 令牌
      * @return 数据声明
      */
-    public static Claims parseToken(String token)
+    public static Claims parseToken(String token)   //1
     {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody(); //jsonwebtoken中获取数据声明,需要传入密钥
     }
 
     /**
      * 根据令牌获取用户标识
-     * 
+     *
      * @param token 令牌
      * @return 用户ID
      */
-    public static String getUserKey(String token)
+    public static String getUserKey(String token)   //1
     {
-        Claims claims = parseToken(token);
-        return getValue(claims, SecurityConstants.USER_KEY);
+        Claims claims = parseToken(token);  //从令牌中获取数据声明
+        return getValue(claims, SecurityConstants.USER_KEY);    //从数据声明中获得user_key
     }
 
     /**
      * 根据令牌获取用户标识
-     * 
+     *
      * @param claims 身份信息
      * @return 用户ID
      */
@@ -65,7 +65,7 @@ public class JwtUtils
 
     /**
      * 根据令牌获取用户ID
-     * 
+     *
      * @param token 令牌
      * @return 用户ID
      */
@@ -77,7 +77,7 @@ public class JwtUtils
 
     /**
      * 根据身份信息获取用户ID
-     * 
+     *
      * @param claims 身份信息
      * @return 用户ID
      */
@@ -88,19 +88,19 @@ public class JwtUtils
 
     /**
      * 根据令牌获取用户名
-     * 
+     *
      * @param token 令牌
      * @return 用户名
      */
-    public static String getUserName(String token)
+    public static String getUserName(String token)  //1
     {
-        Claims claims = parseToken(token);
+        Claims claims = parseToken(token);  //从令牌token中获取数据声明Claims
         return getValue(claims, SecurityConstants.DETAILS_USERNAME);
     }
 
     /**
      * 根据身份信息获取用户名
-     * 
+     *
      * @param claims 身份信息
      * @return 用户名
      */
@@ -111,12 +111,12 @@ public class JwtUtils
 
     /**
      * 根据身份信息获取键值
-     * 
+     *
      * @param claims 身份信息
      * @param key 键
      * @return 值
      */
-    public static String getValue(Claims claims, String key)
+    public static String getValue(Claims claims, String key)    //1
     {
         return Convert.toStr(claims.get(key), "");
     }

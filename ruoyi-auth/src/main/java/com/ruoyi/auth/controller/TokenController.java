@@ -19,7 +19,7 @@ import com.ruoyi.system.api.model.LoginUser;
 
 /**
  * token 控制
- * 
+ *
  * @author ruoyi
  */
 @RestController
@@ -32,7 +32,7 @@ public class TokenController
     private SysLoginService sysLoginService;
 
     @PostMapping("login")
-    public R<?> login(@RequestBody LoginBody form)
+    public R<?> login(@RequestBody LoginBody form)      //登陆请求,LoginBody登陆表单
     {
         // 用户登录
         LoginUser userInfo = sysLoginService.login(form.getUsername(), form.getPassword());
@@ -41,12 +41,12 @@ public class TokenController
     }
 
     @DeleteMapping("logout")
-    public R<?> logout(HttpServletRequest request)
+    public R<?> logout(HttpServletRequest request)  //注销
     {
-        String token = SecurityUtils.getToken(request);
+        String token = SecurityUtils.getToken(request); //从request中获取token
         if (StringUtils.isNotEmpty(token))
         {
-            String username = JwtUtils.getUserName(token);
+            String username = JwtUtils.getUserName(token);  //根据token获取username
             // 删除用户缓存记录
             AuthUtil.logoutByToken(token);
             // 记录用户退出日志
@@ -56,20 +56,20 @@ public class TokenController
     }
 
     @PostMapping("refresh")
-    public R<?> refresh(HttpServletRequest request)
+    public R<?> refresh(HttpServletRequest request) //1 刷新token过期时间
     {
-        LoginUser loginUser = tokenService.getLoginUser(request);
+        LoginUser loginUser = tokenService.getLoginUser(request);   //redis的token_key的值就是登陆用户对象, token_key的过期时间就是登陆过期时间
         if (StringUtils.isNotNull(loginUser))
         {
             // 刷新令牌有效期
-            tokenService.refreshToken(loginUser);
+            tokenService.refreshToken(loginUser);   //刷新redis的token_key的过期时间
             return R.ok();
         }
         return R.ok();
     }
 
     @PostMapping("register")
-    public R<?> register(@RequestBody RegisterBody registerBody)
+    public R<?> register(@RequestBody RegisterBody registerBody)    //注册,username,password
     {
         // 用户注册
         sysLoginService.register(registerBody.getUsername(), registerBody.getPassword());

@@ -34,12 +34,12 @@ public class SysLoginService
     /**
      * 登录
      */
-    public LoginUser login(String username, String password)
+    public LoginUser login(String username, String password)    //登陆校验
     {
         // 用户名或密码为空 错误
         if (StringUtils.isAnyBlank(username, password))
         {
-            recordLogService.recordLogininfor(username, Constants.LOGIN_FAIL, "用户/密码必须填写");
+            recordLogService.recordLogininfor(username, Constants.LOGIN_FAIL, "用户/密码必须填写");     //记录登陆日志
             throw new ServiceException("用户/密码必须填写");
         }
         // 密码如果不在指定范围内 错误
@@ -57,7 +57,7 @@ public class SysLoginService
             throw new ServiceException("用户名不在指定范围");
         }
         // 查询用户信息
-        R<LoginUser> userResult = remoteUserService.getUserInfo(username, SecurityConstants.INNER);
+        R<LoginUser> userResult = remoteUserService.getUserInfo(username, SecurityConstants.INNER); //远程用户服务,用户名,内部请求
 
         if (StringUtils.isNull(userResult) || StringUtils.isNull(userResult.getData()))
         {
@@ -95,7 +95,7 @@ public class SysLoginService
     /**
      * 注册
      */
-    public void register(String username, String password)
+    public void register(String username, String password)  //1
     {
         // 用户名或密码为空 错误
         if (StringUtils.isAnyBlank(username, password))
@@ -117,8 +117,8 @@ public class SysLoginService
         SysUser sysUser = new SysUser();
         sysUser.setUserName(username);
         sysUser.setNickName(username);
-        sysUser.setPassword(SecurityUtils.encryptPassword(password));
-        R<?> registerResult = remoteUserService.registerUserInfo(sysUser, SecurityConstants.INNER);
+        sysUser.setPassword(SecurityUtils.encryptPassword(password));   //密码加密
+        R<?> registerResult = remoteUserService.registerUserInfo(sysUser, SecurityConstants.INNER); //远程调用,SysUser系统用户对象,内部请求
 
         if (R.FAIL == registerResult.getCode())
         {

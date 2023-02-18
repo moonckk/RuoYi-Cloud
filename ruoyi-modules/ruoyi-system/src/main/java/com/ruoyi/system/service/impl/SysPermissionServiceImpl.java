@@ -32,7 +32,7 @@ public class SysPermissionServiceImpl implements ISysPermissionService
      * @return 角色权限信息
      */
     @Override
-    public Set<String> getRolePermission(SysUser user)
+    public Set<String> getRolePermission(SysUser user)      //获取SysUser系统用户对象的角色集合
     {
         Set<String> roles = new HashSet<String>();
         // 管理员拥有所有权限
@@ -54,30 +54,30 @@ public class SysPermissionServiceImpl implements ISysPermissionService
      * @return 菜单权限信息
      */
     @Override
-    public Set<String> getMenuPermission(SysUser user)
+    public Set<String> getMenuPermission(SysUser user)      //获取用户的菜单数据权限,不同用户的菜单不同
     {
         Set<String> perms = new HashSet<String>();
         // 管理员拥有所有权限
         if (user.isAdmin())
         {
-            perms.add("*:*:*");
+            perms.add("*:*:*");     //管理员拥有所有权限
         }
         else
         {
-            List<SysRole> roles = user.getRoles();
-            if (!roles.isEmpty() && roles.size() > 1)
+            List<SysRole> roles = user.getRoles();  //获取用户角色集合
+            if (!roles.isEmpty() && roles.size() > 1)   //多角色设置菜单权限
             {
                 // 多角色设置permissions属性，以便数据权限匹配权限
                 for (SysRole role : roles)
                 {
-                    Set<String> rolePerms = menuService.selectMenuPermsByRoleId(role.getRoleId());
+                    Set<String> rolePerms = menuService.selectMenuPermsByRoleId(role.getRoleId());  //根据角色id获取菜单权限集合
                     role.setPermissions(rolePerms);
                     perms.addAll(rolePerms);
                 }
             }
             else
             {
-                perms.addAll(menuService.selectMenuPermsByUserId(user.getUserId()));
+                perms.addAll(menuService.selectMenuPermsByUserId(user.getUserId()));    //根据用户id获取菜单权限集合
             }
         }
         return perms;

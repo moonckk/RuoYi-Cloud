@@ -59,19 +59,19 @@ public class SysConfigServiceImpl implements ISysConfigService
      * @return 参数键值
      */
     @Override
-    public String selectConfigByKey(String configKey)
+    public String selectConfigByKey(String configKey)   //1
     {
-        String configValue = Convert.toStr(redisService.getCacheObject(getCacheKey(configKey)));
+        String configValue = Convert.toStr(redisService.getCacheObject(getCacheKey(configKey)));    //sys_config:<config_key>
         if (StringUtils.isNotEmpty(configValue))
         {
             return configValue;
         }
         SysConfig config = new SysConfig();
         config.setConfigKey(configKey);
-        SysConfig retConfig = configMapper.selectConfig(config);
+        SysConfig retConfig = configMapper.selectConfig(config);    //redis中查不到,再从db中查询
         if (StringUtils.isNotNull(retConfig))
         {
-            redisService.setCacheObject(getCacheKey(configKey), retConfig.getConfigValue());
+            redisService.setCacheObject(getCacheKey(configKey), retConfig.getConfigValue());    //查到之后再缓存到redis
             return retConfig.getConfigValue();
         }
         return StringUtils.EMPTY;
@@ -142,7 +142,7 @@ public class SysConfigServiceImpl implements ISysConfigService
             SysConfig config = selectConfigById(configId);
             if (StringUtils.equals(UserConstants.YES, config.getConfigType()))
             {
-                throw new ServiceException(String.format("内置参数【%1$s】不能删除 ", config.getConfigKey()));
+                throw new ServiceException(String.format("内置参数【%1$s】不能删除 ", config.getConfigKey()));    //sys_config:<config_key>
             }
             configMapper.deleteConfigById(configId);
             redisService.deleteObject(getCacheKey(config.getConfigKey()));

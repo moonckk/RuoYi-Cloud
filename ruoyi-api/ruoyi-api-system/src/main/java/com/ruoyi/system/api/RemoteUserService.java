@@ -39,5 +39,5 @@ public interface RemoteUserService
      * @return 结果
      */
     @PostMapping("/user/register")
-    public R<Boolean> registerUserInfo(@RequestBody SysUser sysUser, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
+    public R<Boolean> registerUserInfo(@RequestBody SysUser sysUser, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);  //1
 }

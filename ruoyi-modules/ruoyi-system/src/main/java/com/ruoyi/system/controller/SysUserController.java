@@ -113,7 +113,7 @@ public class SysUserController extends BaseController
      */
     @InnerAuth
     @GetMapping("/info/{username}")
-    public R<LoginUser> info(@PathVariable("username") String username)
+    public R<LoginUser> info(@PathVariable("username") String username)     //获取用户信息
     {
         SysUser sysUser = userService.selectUserByUserName(username);
         if (StringUtils.isNull(sysUser))
@@ -121,10 +121,10 @@ public class SysUserController extends BaseController
             return R.fail("用户名或密码错误");
         }
         // 角色集合
-        Set<String> roles = permissionService.getRolePermission(sysUser);
+        Set<String> roles = permissionService.getRolePermission(sysUser);   //获取用户的角色权限
         // 权限集合
-        Set<String> permissions = permissionService.getMenuPermission(sysUser);
-        LoginUser sysUserVo = new LoginUser();
+        Set<String> permissions = permissionService.getMenuPermission(sysUser); //获取用户的菜单权限
+        LoginUser sysUserVo = new LoginUser();  //包装user vo
         sysUserVo.setSysUser(sysUser);
         sysUserVo.setRoles(roles);
         sysUserVo.setPermissions(permissions);
@@ -136,14 +136,14 @@ public class SysUserController extends BaseController
      */
     @InnerAuth
     @PostMapping("/register")
-    public R<Boolean> register(@RequestBody SysUser sysUser)
+    public R<Boolean> register(@RequestBody SysUser sysUser)    //1  注册用户
     {
         String username = sysUser.getUserName();
-        if (!("true".equals(configService.selectConfigByKey("sys.account.registerUser"))))
+        if (!("true".equals(configService.selectConfigByKey("sys.account.registerUser"))))  //读取配置,是否开启注册
         {
             return R.fail("当前系统没有开启注册功能！");
         }
-        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(sysUser)))
+        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(sysUser)))  //用户已经注册,不能重复注册
         {
             return R.fail("保存用户'" + username + "'失败，注册账号已存在");
         }
