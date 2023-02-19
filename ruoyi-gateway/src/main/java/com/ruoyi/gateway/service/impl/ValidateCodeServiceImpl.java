@@ -55,28 +55,28 @@ public class ValidateCodeServiceImpl implements ValidateCodeService
         }
 
         // 保存验证码信息
-        String uuid = IdUtils.simpleUUID();
-        String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + uuid;
+        String uuid = IdUtils.simpleUUID(); //获取uuid
+        String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + uuid;  //验证码key,captcha_codes:9c07b7bb301a4a528fa9e39c0184ffe4
 
         String capStr = null, code = null;
-        BufferedImage image = null;
+        BufferedImage image = null;     //图像buffer
 
         String captchaType = captchaProperties.getType();
         // 生成验证码
-        if ("math".equals(captchaType))
+        if ("math".equals(captchaType)) //math类验证码
         {
-            String capText = captchaProducerMath.createText();
-            capStr = capText.substring(0, capText.lastIndexOf("@"));
-            code = capText.substring(capText.lastIndexOf("@") + 1);
-            image = captchaProducerMath.createImage(capStr);
+            String capText = captchaProducerMath.createText();  //获取数学验证码,8-0=?@8
+            capStr = capText.substring(0, capText.lastIndexOf("@"));    //运算,用@分割,8-0=?
+            code = capText.substring(capText.lastIndexOf("@") + 1);     //结果,8
+            image = captchaProducerMath.createImage(capStr);    //根据字符串生成图片buffer
         }
-        else if ("char".equals(captchaType))
+        else if ("char".equals(captchaType))    //字符型验证码
         {
             capStr = code = captchaProducer.createText();
             image = captchaProducer.createImage(capStr);
         }
 
-        redisService.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+        redisService.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);   //将验证码结果缓存到redis
         // 转换流信息写出
         FastByteArrayOutputStream os = new FastByteArrayOutputStream();
         try
@@ -88,8 +88,8 @@ public class ValidateCodeServiceImpl implements ValidateCodeService
             return AjaxResult.error(e.getMessage());
         }
 
-        ajax.put("uuid", uuid);
-        ajax.put("img", Base64.encode(os.toByteArray()));
+        ajax.put("uuid", uuid); //将该验证码对应的uuid返回
+        ajax.put("img", Base64.encode(os.toByteArray()));   //将该验证码的图片返回
         return ajax;
     }
 
@@ -97,7 +97,7 @@ public class ValidateCodeServiceImpl implements ValidateCodeService
      * 校验验证码
      */
     @Override
-    public void checkCaptcha(String code, String uuid) throws CaptchaException
+    public void checkCaptcha(String code, String uuid) throws CaptchaException  //1
     {
         if (StringUtils.isEmpty(code))
         {
@@ -107,11 +107,11 @@ public class ValidateCodeServiceImpl implements ValidateCodeService
         {
             throw new CaptchaException("验证码已失效");
         }
-        String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + uuid;
-        String captcha = redisService.getCacheObject(verifyKey);
-        redisService.deleteObject(verifyKey);
+        String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + uuid;  //拼装验证码的redis key
+        String captcha = redisService.getCacheObject(verifyKey);    //获得redis中的结果
+        redisService.deleteObject(verifyKey);   //redis删除结果
 
-        if (!code.equalsIgnoreCase(captcha))
+        if (!code.equalsIgnoreCase(captcha))    //验证码匹配判断
         {
             throw new CaptchaException("验证码错误");
         }

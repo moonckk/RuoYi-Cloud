@@ -16,7 +16,7 @@ import static com.google.code.kaptcha.Constants.*;
 public class CaptchaConfig
 {
     @Bean(name = "captchaProducer")
-    public DefaultKaptcha getKaptchaBean()
+    public DefaultKaptcha getKaptchaBean()   //captchaProducer bean的配置,配置验证码的样式
     {
         DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
         Properties properties = new Properties();
@@ -44,7 +44,7 @@ public class CaptchaConfig
     }
     
     @Bean(name = "captchaProducerMath")
-    public DefaultKaptcha getKaptchaBeanMath()
+    public DefaultKaptcha getKaptchaBeanMath()      //数学类验证码配置
     {
         DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
         Properties properties = new Properties();

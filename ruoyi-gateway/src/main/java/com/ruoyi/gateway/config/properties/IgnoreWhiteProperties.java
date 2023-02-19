@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @RefreshScope
-@ConfigurationProperties(prefix = "security.ignore")
+@ConfigurationProperties(prefix = "security.ignore")    //读取远程配置属性
 public class IgnoreWhiteProperties
 {
     /**

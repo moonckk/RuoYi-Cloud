@@ -40,34 +40,34 @@ public class AuthFilter implements GlobalFilter, Ordered
 
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain)
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain)  //Mono<Void> webflux
     {
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpRequest.Builder mutate = request.mutate();
 
         String url = request.getURI().getPath();
         // 跳过不需要验证的路径
-        if (StringUtils.matches(url, ignoreWhite.getWhites()))
+        if (StringUtils.matches(url, ignoreWhite.getWhites()))  //判断url是否在白名单内,存在就放行
         {
-            return chain.filter(exchange);
+            return chain.filter(exchange);  //进入下一个过滤器
         }
         String token = getToken(request);
         if (StringUtils.isEmpty(token))
         {
             return unauthorizedResponse(exchange, "令牌不能为空");
         }
-        Claims claims = JwtUtils.parseToken(token);
+        Claims claims = JwtUtils.parseToken(token); //获取token对应的数据声明对象
         if (claims == null)
         {
             return unauthorizedResponse(exchange, "令牌已过期或验证不正确！");
         }
-        String userkey = JwtUtils.getUserKey(claims);
-        boolean islogin = redisService.hasKey(getTokenKey(userkey));
+        String userkey = JwtUtils.getUserKey(claims);   //从数据声明中获取redis userkey
+        boolean islogin = redisService.hasKey(getTokenKey(userkey));    //判断redis是否有登陆缓存
         if (!islogin)
         {
             return unauthorizedResponse(exchange, "登录状态已过期");
         }
-        String userid = JwtUtils.getUserId(claims);
+        String userid = JwtUtils.getUserId(claims); //从数据声明中获取用户id
         String username = JwtUtils.getUserName(claims);
         if (StringUtils.isEmpty(userid) || StringUtils.isEmpty(username))
         {

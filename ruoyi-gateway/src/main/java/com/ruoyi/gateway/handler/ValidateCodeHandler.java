@@ -25,12 +25,12 @@ public class ValidateCodeHandler implements HandlerFunction<ServerResponse>
     private ValidateCodeService validateCodeService;
 
     @Override
-    public Mono<ServerResponse> handle(ServerRequest serverRequest)
+    public Mono<ServerResponse> handle(ServerRequest serverRequest)     //获取验证码处理器
     {
-        AjaxResult ajax;
+        AjaxResult ajax;        //操作消息提醒
         try
         {
-            ajax = validateCodeService.createCaptcha();
+            ajax = validateCodeService.createCaptcha();     //生成验证码
         }
         catch (CaptchaException | IOException e)
         {

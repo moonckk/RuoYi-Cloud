@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @RefreshScope
-@ConfigurationProperties(prefix = "security.captcha")
+@ConfigurationProperties(prefix = "security.captcha")       //读取nacos中security.captcha配置的属性
 public class CaptchaProperties
 {
     /**
@@ -22,7 +22,7 @@ public class CaptchaProperties
     /**
      * 验证码类型（math 数组计算 char 字符）
      */
-    private String type;
+    private String type;        //可以扩展其他的验证码类型
 
     public Boolean getEnabled()
     {

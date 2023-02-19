@@ -42,7 +42,7 @@ public class BlackListUrlFilter extends AbstractGatewayFilterFactory<BlackListUr
 
         private List<Pattern> blacklistUrlPattern = new ArrayList<>();
 
-        public boolean matchBlacklist(String url)
+        public boolean matchBlacklist(String url)   //url匹配黑名单集合
         {
             return !blacklistUrlPattern.isEmpty() && blacklistUrlPattern.stream().anyMatch(p -> p.matcher(url).find());
         }

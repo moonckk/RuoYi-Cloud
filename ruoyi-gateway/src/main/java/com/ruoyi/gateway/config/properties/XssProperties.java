@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @RefreshScope
 @ConfigurationProperties(prefix = "security.xss")
-public class XssProperties
+public class XssProperties  //开启防止xss脚本攻击
 {
     /**
      * Xss开关
